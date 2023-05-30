@@ -17,7 +17,7 @@ class OdomPub(Node):
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.pose.pose.position.x = 1.
         msg.pose.pose.position.y = 2.
-        msg.pose.pose.position.z = 0.3
+        msg.pose.pose.position.z = 2.
         msg.pose.pose.orientation.x = 0.1727661
         msg.pose.pose.orientation.y = 0.1727661
         msg.pose.pose.orientation.z = 0.

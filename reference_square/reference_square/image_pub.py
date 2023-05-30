@@ -15,7 +15,7 @@ class OdomPub(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
-        img = cv.imread('/home/mamba/ros2_fiducial_square/src/reference_square/reference_square/desk.jpg')
+        img = cv.imread('/home/mamba/ros2_reference_square/reference_square/reference_square/desk.jpg')
         self.get_logger().info(f'send image')
         self._publisher_.publish(self.br.cv2_to_imgmsg(img))
 
