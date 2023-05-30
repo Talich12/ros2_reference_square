@@ -1,6 +1,0 @@
-[console_scripts]
-camerainfo_pub = reference_square.camera_config_pub:main
-image_pub = reference_square.image_pub:main
-odom_pub = reference_square.odom_pub:main
-reference_square = reference_square.reference_square:main
-
