@@ -1,0 +1,50 @@
+running egg_info
+creating ../build/reference_square/reference_square.egg-info
+writing ../build/reference_square/reference_square.egg-info/PKG-INFO
+writing dependency_links to ../build/reference_square/reference_square.egg-info/dependency_links.txt
+writing entry points to ../build/reference_square/reference_square.egg-info/entry_points.txt
+writing requirements to ../build/reference_square/reference_square.egg-info/requires.txt
+writing top-level names to ../build/reference_square/reference_square.egg-info/top_level.txt
+writing manifest file '../build/reference_square/reference_square.egg-info/SOURCES.txt'
+reading manifest file '../build/reference_square/reference_square.egg-info/SOURCES.txt'
+writing manifest file '../build/reference_square/reference_square.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/mamba/ros2_reference_square/build/reference_square/build
+creating /home/mamba/ros2_reference_square/build/reference_square/build/lib
+creating /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+copying reference_square/calibration.py -> /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+copying reference_square/reference_square.py -> /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+copying reference_square/odom_pub.py -> /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+copying reference_square/image_pub.py -> /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+copying reference_square/__init__.py -> /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+copying reference_square/camera_config_pub.py -> /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square
+running install
+running install_lib
+creating /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+copying /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square/calibration.py -> /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+copying /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square/reference_square.py -> /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+copying /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square/odom_pub.py -> /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+copying /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square/image_pub.py -> /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+copying /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square/__init__.py -> /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+copying /home/mamba/ros2_reference_square/build/reference_square/build/lib/reference_square/camera_config_pub.py -> /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square
+byte-compiling /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square/calibration.py to calibration.cpython-38.pyc
+byte-compiling /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square/reference_square.py to reference_square.cpython-38.pyc
+byte-compiling /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square/odom_pub.py to odom_pub.cpython-38.pyc
+byte-compiling /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square/image_pub.py to image_pub.cpython-38.pyc
+byte-compiling /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square/__init__.py to __init__.cpython-38.pyc
+byte-compiling /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square/camera_config_pub.py to camera_config_pub.cpython-38.pyc
+running install_data
+creating /home/mamba/ros2_reference_square/install/reference_square/share/ament_index
+creating /home/mamba/ros2_reference_square/install/reference_square/share/ament_index/resource_index
+creating /home/mamba/ros2_reference_square/install/reference_square/share/ament_index/resource_index/packages
+copying resource/reference_square -> /home/mamba/ros2_reference_square/install/reference_square/share/ament_index/resource_index/packages
+copying package.xml -> /home/mamba/ros2_reference_square/install/reference_square/share/reference_square
+running install_egg_info
+Copying ../build/reference_square/reference_square.egg-info to /home/mamba/ros2_reference_square/install/reference_square/lib/python3.8/site-packages/reference_square-0.0.0-py3.8.egg-info
+running install_scripts
+Installing camerainfo_pub script to /home/mamba/ros2_reference_square/install/reference_square/lib/reference_square
+Installing image_pub script to /home/mamba/ros2_reference_square/install/reference_square/lib/reference_square
+Installing odom_pub script to /home/mamba/ros2_reference_square/install/reference_square/lib/reference_square
+Installing reference_square script to /home/mamba/ros2_reference_square/install/reference_square/lib/reference_square
+writing list of installed files to '/home/mamba/ros2_reference_square/build/reference_square/install.log'

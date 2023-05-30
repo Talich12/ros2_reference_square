@@ -4,6 +4,7 @@ import calibration
 from transforms3d import euler
 from rclpy.node import Node
 
+from rclpy.time import Time
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
 from nav_msgs.msg import Odometry
@@ -19,7 +20,7 @@ class ReferenceSquareNode(Node):
     def __init__(self):
         super().__init__('reference_square')
         self._br = CvBridge()
-        self._projection_square_side = 1
+        self._projection_square_side = 1 # В метрах
         self._id = id
 
         self._CameraInfoSubscription = self.create_subscription(CameraInfo, '/solaster/front_camera/config', self.camera_info_callback, 10)
@@ -32,6 +33,10 @@ class ReferenceSquareNode(Node):
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
+        self._euler_angles = []
+        self._convert_mtx = []
+        self._image = []
+
     def odom_callback(self, msg: Odometry):
         pose_data = msg.pose.pose
         # Переводим позицию в массив в формате [x,y,z]
@@ -41,12 +46,17 @@ class ReferenceSquareNode(Node):
         orientation = [pose_data.orientation.w, pose_data.orientation.x, pose_data.orientation.y, pose_data.orientation.z]
         degrees = []
         # Преобразовываем орентацию в повороты Эйлера и переводим из радиан в градусы
-        angles = euler.quat2euler(orientation)
+        try:
+            angles = euler.quat2euler(orientation)
+        except:
+            return
+        
         for angle in angles:
             degrees.append(math.degrees(angle))
 
         self._euler_angles = degrees
 
+        self._odom_timestump = msg._header._stamp.nanosec + msg._header._stamp.sec*(10**9)
 
     def camera_info_callback(self, msg:CameraInfo):
         # Переводим массив искажения msg.k [float[9]] в матрицу 3x3 
@@ -59,9 +69,22 @@ class ReferenceSquareNode(Node):
 
     def image_callback(self, msg: Image):
         # Преобразовываем msg (Image) в cv2 объект
-        self._image = self._br.imgmsg_to_cv2(msg)
+        try:
+            self._image = self._br.imgmsg_to_cv2(msg)
+        except:
+            return
         
     def timer_callback(self):
+        if len(self._euler_angles) == 0 or len(self._convert_mtx) == 0 or len(self._image) == 0:
+            print("error")
+            return
+        
+        time = self.get_clock().now().nanoseconds
+        if self._odom_timestump + 10**9 < time:
+                print("error")
+                return
+
+
         msg = Polygon()
 
         half_size = self._projection_square_side / 2
@@ -107,6 +130,7 @@ class ReferenceSquareNode(Node):
                 r2_frame,
                 r3_frame,
                 r4_frame]
+        
         
         # Вычисляем переменную для правильного отображения квадрата на фото (В этом случае квадрат будет ровно по центру изображения)
         trans_vec = r0_frame - c_frame
