@@ -6,7 +6,7 @@ from sensor_msgs.msg import CameraInfo
 
 class OdomPub(Node):
     def __init__(self):
-        super().__init__('odom_pub')
+        super().__init__('test_odom_publisher')
         self._publisher_ = self.create_publisher(CameraInfo, '/solaster/front_camera/config', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
