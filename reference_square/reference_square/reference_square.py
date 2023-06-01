@@ -89,7 +89,7 @@ class ReferenceSquareNode(Node):
         Получить изображение
 
         Args:
-            msg (Image): _description_
+            msg (Image): Изображение
         """
 
         # Преобразовываем msg (Image) в cv2 объект
