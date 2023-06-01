@@ -6,6 +6,7 @@ from sensor_msgs.msg import Image
 import cv2 as cv
 from cv_bridge import CvBridge
 
+
 class OdomPub(Node):
     def __init__(self):
         self.br = CvBridge()
@@ -15,7 +16,8 @@ class OdomPub(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
-        img = cv.imread('/home/mamba/ros2_reference_square/reference_square/reference_square/desk.jpg')
+        image_path = '/home/mamba/ros2_reference_square/reference_square/reference_square/desk.jpg'
+        img = cv.imread(image_path)
         self.get_logger().info(f'send image')
         self._publisher_.publish(self.br.cv2_to_imgmsg(img))
 

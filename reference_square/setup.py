@@ -26,6 +26,6 @@ setup(
                             'image_pub = reference_square.image_pub:main',
                             'camerainfo_pub = reference_square.camera_config_pub:main',
                             'reference_square = reference_square.reference_square:main'
-        ],
+                            ],
     },
 )

@@ -4,7 +4,6 @@ from rclpy.node import Node
 from nav_msgs.msg import Odometry
 
 
-
 class OdomPub(Node):
     def __init__(self):
         super().__init__('odom_pub')
@@ -24,7 +23,6 @@ class OdomPub(Node):
         msg.pose.pose.orientation.w = 0.9696926
         self.get_logger().info(f'{msg}')
         self._publisher_.publish(msg)
-
 
 
 def main(args=None):

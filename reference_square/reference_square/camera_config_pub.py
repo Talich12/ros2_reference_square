@@ -3,7 +3,6 @@ from rclpy.node import Node
 
 from sensor_msgs.msg import CameraInfo
 
-import cv2 as cv
 
 class OdomPub(Node):
     def __init__(self):
@@ -15,16 +14,16 @@ class OdomPub(Node):
     def timer_callback(self):
         msg = CameraInfo()
         msg.k = [3143.707075133142,
-            0.0,
-            1472.5466182777634,
-            0.0,
-            3156.761966184623,
-            1956.168580192791,
-            0.0,
-            0.0,
-            1.0
+                 0.0,
+                 1472.5466182777634,
+                 0.0,
+                 3156.761966184623,
+                 1956.168580192791,
+                 0.0,
+                 0.0,
+                 1.0
+                 ]
 
-        ]
         msg.d = [
             0.16875903232491504,
             -1.6926366325911733,
