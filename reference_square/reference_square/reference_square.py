@@ -157,7 +157,7 @@ class ReferenceSquareNode(Node):
         cv.imwrite('reference_square.jpg', img)
 
         self.get_logger().info(f'send_reference_square')
-        self._image_publisher.publish(self._br.cv2_to_imgmsg(img))
+        self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
 
         self._euler_angles = []
         self._convert_mtx = []

@@ -36,7 +36,7 @@ class ImagePub(Node):
 
     def timer_callback(self):
         self.get_logger().info(f'Send test image')
-        self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image))
+        self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image, encoding='rgb8'))
 
 
 def main(args=None):
