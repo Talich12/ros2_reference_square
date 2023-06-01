@@ -39,6 +39,13 @@ class ReferenceSquareNode(Node):
         self._image = []
 
     def odom_callback(self, msg: Odometry):
+        """
+        Получить данные положения апарата в пространстве
+
+        Args:
+            msg (Odometry): Данные о позиции и ориентации
+        """
+
         pose_data = msg.pose.pose
         # Переводим позицию в массив в формате [x,y,z]
         pose = [pose_data.position.x, pose_data.position.y, pose_data.position.z]
@@ -62,6 +69,13 @@ class ReferenceSquareNode(Node):
         self._odom_timestump = msg._header._stamp.nanosec + msg._header._stamp.sec*(10**9)
 
     def camera_info_callback(self, msg: CameraInfo):
+        """
+        Получить данные конфига камеры
+
+        Args:
+            msg (CameraInfo): Данные конфига камеры
+        """
+
         # Переводим массив искажения msg.k [float[9]] в матрицу 3x3
         mtx = [[msg.k[0], msg.k[1], msg.k[2]],
                [msg.k[3], msg.k[4], msg.k[5]],
@@ -71,6 +85,13 @@ class ReferenceSquareNode(Node):
         self._convert_mtx = mtx
 
     def image_callback(self, msg: Image):
+        """
+        Получить изображение
+
+        Args:
+            msg (Image): _description_
+        """
+
         # Преобразовываем msg (Image) в cv2 объект
         try:
             self._image = self._br.imgmsg_to_cv2(msg)
@@ -78,6 +99,8 @@ class ReferenceSquareNode(Node):
             return
 
     def timer_callback(self):
+        """Построение проекционного квадрата"""
+
         if len(self._euler_angles) == 0 or len(self._convert_mtx) == 0 or len(self._image) == 0:
             print("error")
             return
