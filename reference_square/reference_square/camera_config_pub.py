@@ -38,15 +38,20 @@ class OdomPub(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    odom_pub = OdomPub()
+    try:
+        odom_pub = OdomPub()
+        rclpy.spin(odom_pub)
+    except Exception as e:
+        print('OdomPub::Exception ' + str(e))
 
-    rclpy.spin(odom_pub)
+    # Заглушка что бы нода не вылетала с ошибкой после Ctrl+C
+    except KeyboardInterrupt:
+        pass
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    odom_pub.destroy_node()
-    rclpy.shutdown()
+    finally:
+        if rclpy.ok():
+            odom_pub.destroy_node()
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

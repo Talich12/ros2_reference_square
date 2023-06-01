@@ -167,15 +167,20 @@ class ReferenceSquareNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    reference_square = ReferenceSquareNode()
+    try:
+        reference_square = ReferenceSquareNode()
+        rclpy.spin(reference_square)
+    except Exception as e:
+        print('ReferenceSquareNode::Exception ' + str(e))
 
-    rclpy.spin(reference_square)
+    # Заглушка что бы нода не вылетала с ошибкой после Ctrl+C
+    except KeyboardInterrupt:
+        pass
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    reference_square.destroy_node()
-    rclpy.shutdown()
+    finally:
+        if rclpy.ok():
+            reference_square.destroy_node()
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
