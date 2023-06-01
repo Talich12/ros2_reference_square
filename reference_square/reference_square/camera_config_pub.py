@@ -4,11 +4,13 @@ from rclpy.node import Node
 from sensor_msgs.msg import CameraInfo
 
 
-class OdomPub(Node):
+class CameraConfigPub(Node):
     def __init__(self):
-        super().__init__('test_odom_publisher')
-        self._publisher_ = self.create_publisher(CameraInfo, '/solaster/front_camera/config', 10)
-        timer_period = 1  # seconds
+        super().__init__('test_config_publisher')
+        self._camera_info_publisher = self.create_publisher(
+            CameraInfo, '/solaster/front_camera/config', 10)
+
+        timer_period = 1.0  # [c]
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
@@ -32,17 +34,17 @@ class OdomPub(Node):
             4.3384439380592745
         ]
         self.get_logger().info(f'{msg}')
-        self._publisher_.publish(msg)
+        self._camera_info_publisher.publish(msg)
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     try:
-        odom_pub = OdomPub()
+        odom_pub = CameraConfigPub()
         rclpy.spin(odom_pub)
     except Exception as e:
-        print('OdomPub::Exception ' + str(e))
+        print('CameraConfigPub::Exception ' + str(e))
 
     # Заглушка что бы нода не вылетала с ошибкой после Ctrl+C
     except KeyboardInterrupt:
