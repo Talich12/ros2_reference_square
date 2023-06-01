@@ -21,11 +21,11 @@ class ReferenceSquareNode(Node):
         self._projection_square_side = 1  # В метрах
         self._id = id
 
-        self._CameraInfoSubscription = self.create_subscription(
+        self._сamera_info_subscription = self.create_subscription(
             CameraInfo, '/solaster/front_camera/config', self.camera_info_callback, 10)
-        self._ImageSubscription = self.create_subscription(
+        self._image_subscription = self.create_subscription(
             Image, '/solaster/front_camera/image', self.image_callback, 10)
-        self._OdomSubscription = self.create_subscription(
+        self._odom_subscription = self.create_subscription(
             Odometry, '/solaster/odom', self.odom_callback, 10)
 
         self._image_publisher = self.create_publisher(Image, "topic_image", 10)

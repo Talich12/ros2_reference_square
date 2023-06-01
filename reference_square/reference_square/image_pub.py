@@ -14,7 +14,7 @@ class ImagePub(Node):
     def __init__(self):
         self.br = CvBridge()
         super().__init__('test_image_publisher')
-        self._publisher_ = self.create_publisher(Image, '/solaster/front_camera/image', 10)
+        self._publisher = self.create_publisher(Image, '/solaster/front_camera/image', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -36,7 +36,7 @@ class ImagePub(Node):
 
     def timer_callback(self):
         self.get_logger().info(f'Send test image')
-        self._publisher_.publish(self.br.cv2_to_imgmsg(self._test_image))
+        self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image))
 
 
 def main(args=None):
