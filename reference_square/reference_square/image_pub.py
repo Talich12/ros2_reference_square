@@ -7,10 +7,10 @@ import cv2 as cv
 from cv_bridge import CvBridge
 
 
-class OdomPub(Node):
+class ImagePub(Node):
     def __init__(self):
         self.br = CvBridge()
-        super().__init__('odom_pub')
+        super().__init__('image_pub')
         self._publisher_ = self.create_publisher(Image, '/solaster/front_camera/image', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
@@ -25,15 +25,20 @@ class OdomPub(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    odom_pub = OdomPub()
+    try:
+        image_pub = ImagePub()
+        rclpy.spin(image_pub)
+    except Exception as e:
+        print('ImagePub::Exception ' + str(e))
 
-    rclpy.spin(odom_pub)
+    # Заглушка что бы нода не вылетала с ошибкой после Ctrl+C
+    except KeyboardInterrupt:
+        pass
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    odom_pub.destroy_node()
-    rclpy.shutdown()
+    finally:
+        if rclpy.ok():
+            image_pub.destroy_node()
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
