@@ -99,9 +99,16 @@ class ReferenceSquareNode(Node):
 
     def timer_callback(self):
         """Построение проекционного квадрата"""
+        if self._euler_angles == None:
+            self.get_logger().warning("No navigation data for making reference square")
+            return
 
-        if self._euler_angles == None or self._convert_mtx == None or self._image == None:
-            print("error")
+        if self._convert_mtx == None:
+            self.get_logger().warning("No camera info for making reference square")
+            return
+        
+        if self._image == None:
+            self.get_logger().warning("No camera image for making reference square")
             return
 
         time = self.get_clock().now().nanoseconds
