@@ -54,12 +54,10 @@ class ReferenceSquareNode(Node):
         orientation = [pose_data.orientation.w, pose_data.orientation.x,
                        pose_data.orientation.y, pose_data.orientation.z]
         degrees = []
+        
         # Преобразовываем ориентацию в повороты Эйлера и переводим из радиан в градусы
-        try:
-            angles = euler.quat2euler(orientation)
-        except Exception:
-            return
-
+        angles = euler.quat2euler(orientation)
+        
         for angle in angles:
             degrees.append(math.degrees(angle))
 
