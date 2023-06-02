@@ -19,7 +19,6 @@ class ReferenceSquareNode(Node):
         super().__init__('reference_square')
         self._br = CvBridge()
         self._projection_square_side = 1  # В метрах
-        self._id = id
 
         self._сamera_info_subscription = self.create_subscription(
             CameraInfo, '/solaster/front_camera/config', self.camera_info_callback, 10)
