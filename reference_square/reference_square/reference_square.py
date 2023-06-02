@@ -3,6 +3,7 @@ from . import calibration
 
 from transforms3d import euler
 from rclpy.node import Node
+from rclpy.time import Time, Duration
 
 from sensor_msgs.msg import Image, CameraInfo
 from geometry_msgs.msg import Polygon, Point32
@@ -15,6 +16,9 @@ from cv_bridge import CvBridge
 
 
 class ReferenceSquareNode(Node):
+    # Предельное время пока навигационные данные считаются свежими
+    DurationLimitOdom = Duration(seconds=0.5)
+
     def __init__(self):
         super().__init__('reference_square')
         self._br = CvBridge()
@@ -44,7 +48,6 @@ class ReferenceSquareNode(Node):
         Args:
             msg (Odometry): Данные о позиции и ориентации
         """
-
         pose_data = msg.pose.pose
         # Переводим позицию в массив в формате [x,y,z]
         pose = [pose_data.position.x, pose_data.position.y, pose_data.position.z]
@@ -54,16 +57,16 @@ class ReferenceSquareNode(Node):
         orientation = [pose_data.orientation.w, pose_data.orientation.x,
                        pose_data.orientation.y, pose_data.orientation.z]
         degrees = []
-        
+
         # Преобразовываем ориентацию в повороты Эйлера и переводим из радиан в градусы
         angles = euler.quat2euler(orientation)
-        
+
         for angle in angles:
             degrees.append(math.degrees(angle))
 
         self._euler_angles = degrees
 
-        self._odom_timestump = msg._header._stamp.nanosec + msg._header._stamp.sec*(10**9)
+        self._last_stamp_odom = Time.from_msg(msg.header.stamp)
 
     def camera_info_callback(self, msg: CameraInfo):
         """
@@ -72,7 +75,6 @@ class ReferenceSquareNode(Node):
         Args:
             msg (CameraInfo): Данные конфига камеры
         """
-
         # Переводим массив искажения msg.k [float[9]] в матрицу 3x3
         mtx = [[msg.k[0], msg.k[1], msg.k[2]],
                [msg.k[3], msg.k[4], msg.k[5]],
@@ -88,7 +90,6 @@ class ReferenceSquareNode(Node):
         Args:
             msg (Image): Изображение
         """
-
         # Преобразовываем msg (Image) в cv2 объект
         try:
             self._image = self._br.imgmsg_to_cv2(msg)
@@ -97,21 +98,21 @@ class ReferenceSquareNode(Node):
 
     def timer_callback(self):
         """Построение проекционного квадрата"""
-        if self._euler_angles == None:
+        if self._euler_angles is None:
             self.get_logger().warning("No navigation data for making reference square")
             return
 
-        if self._convert_mtx == None:
+        if self._convert_mtx is None:
             self.get_logger().warning("No camera info for making reference square")
             return
-        
-        if self._image == None:
+
+        if self._image is None:
             self.get_logger().warning("No camera image for making reference square")
             return
 
-        time = self.get_clock().now().nanoseconds
-        if self._odom_timestump + 10**9 < time:
-            print("error")
+        last_odom_dutation = self.get_clock().now() - self._last_stamp_odom
+        if last_odom_dutation > self.DurationLimitOdom:
+            self.get_logger().warning("Odometry data too old for making reference square")
             return
 
         msg = Polygon()
