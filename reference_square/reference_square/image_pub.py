@@ -35,8 +35,8 @@ class ImagePub(Node):
             raise Exception("Test image is corrupt")
 
     def timer_callback(self):
-        self.get_logger().info(f'Send test image')
         self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image, encoding='rgb8'))
+        self.get_logger().info('Send test image')
 
 
 def main(args=None):

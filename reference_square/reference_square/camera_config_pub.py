@@ -33,8 +33,8 @@ class CameraConfigPub(Node):
             0.0013668182615799744,
             4.3384439380592745
         ]
-        self.get_logger().info(f'{msg}')
         self._camera_info_publisher.publish(msg)
+        self.get_logger().info('Send test camera info')
 
 
 def main(args=None):
