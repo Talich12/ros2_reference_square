@@ -33,9 +33,9 @@ class ReferenceSquareNode(Node):
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
-        self._euler_angles = []
-        self._convert_mtx = []
-        self._image = []
+        self._euler_angles = None
+        self._convert_mtx = None
+        self._image = None
 
     def odom_callback(self, msg: Odometry):
         """
@@ -100,7 +100,7 @@ class ReferenceSquareNode(Node):
     def timer_callback(self):
         """Построение проекционного квадрата"""
 
-        if len(self._euler_angles) == 0 or len(self._convert_mtx) == 0 or len(self._image) == 0:
+        if self._euler_angles == None or self._convert_mtx == None or self._image == None:
             print("error")
             return
 
