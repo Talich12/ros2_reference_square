@@ -1,3 +1,4 @@
+"""Файл публикации навигационных данных."""
 import rclpy
 from rclpy.node import Node
 
@@ -5,13 +6,21 @@ from nav_msgs.msg import Odometry
 
 
 class OdomPub(Node):
+    """Класс ноды публикации данных позиции и ориенации.
+
+    Args:
+        Node (Node): ROS2 нода.
+    """
+
     def __init__(self):
+        """Инициализация объектов."""
         super().__init__('test_odom_publisher')
         self._publisher_ = self.create_publisher(Odometry, '/solaster/odom', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
+        """Публикация данных позиции и ориентации."""
         msg = Odometry()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.pose.pose.position.x = 1.
@@ -26,6 +35,11 @@ class OdomPub(Node):
 
 
 def main(args=None):
+    """Инициализация ноды и запуск.
+
+    Args:
+        args (any, optional): Входящие аругменты. Defaults to None.
+    """
     rclpy.init(args=args)
 
     try:

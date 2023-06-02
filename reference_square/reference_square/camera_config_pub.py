@@ -1,3 +1,4 @@
+"""Файл публикации данных математической модели камеры."""
 import rclpy
 from rclpy.node import Node
 
@@ -5,7 +6,14 @@ from sensor_msgs.msg import CameraInfo
 
 
 class CameraConfigPub(Node):
+    """Класс ноды публикации данных математической модели камеры.
+
+    Args:
+        Node (Node): ROS2 нода.
+    """
+
     def __init__(self):
+        """ИНициализация объектов."""
         super().__init__('test_config_publisher')
         self._camera_info_publisher = self.create_publisher(
             CameraInfo, '/solaster/front_camera/config', 10)
@@ -14,6 +22,7 @@ class CameraConfigPub(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
+        """Публикация данных математической модели камеры."""
         msg = CameraInfo()
         msg.k = [3143.707075133142,
                  0.0,
@@ -38,6 +47,11 @@ class CameraConfigPub(Node):
 
 
 def main(args=None):
+    """Инициализация ноды и запуск.
+
+    Args:
+        args (any, optional): входные параметры. Defaults to None.
+    """
     rclpy.init(args=args)
 
     try:

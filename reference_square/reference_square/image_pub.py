@@ -1,3 +1,4 @@
+"""Файл публикации тестового изображения."""
 import rclpy
 from rclpy.node import Node
 
@@ -11,7 +12,19 @@ from cv_bridge import CvBridge
 
 
 class ImagePub(Node):
+    """Класс ноды публикации тестового изображения.
+
+    Args:
+        Node (Node): ROS2 нода.
+    """
+
     def __init__(self):
+        """Инициализация объектов и запись изображения в cv2.
+
+        Raises:
+            Exception: Исключение на существование файла изображения.
+            Exception: Исключение на корректное открытие изображения.
+        """
         self.br = CvBridge()
         super().__init__('test_image_publisher')
         self._publisher = self.create_publisher(Image, '/solaster/front_camera/image', 10)
@@ -35,11 +48,17 @@ class ImagePub(Node):
             raise Exception("Test image is corrupt")
 
     def timer_callback(self):
+        """Публикация изображения."""
         self.get_logger().info(f'Send test image')
         self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image, encoding='rgb8'))
 
 
 def main(args=None):
+    """Инициализация ноды и запуск.
+
+    Args:
+        args (any, optional): Входящие аргументы. Defaults to None.
+    """
     rclpy.init(args=args)
     
     try:
