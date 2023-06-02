@@ -148,7 +148,7 @@ def get_RT(Rx, Ry, T):
     Returns:
         float[4][4]: Общая матрица преоброзований в гомогенных координатах
     """
-    
+
     R = Rx.dot(Ry)
     R = np.hstack([R, T])
     row = [0, 0, 0, 1]

@@ -41,7 +41,7 @@ class ImagePub(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    
+
     try:
         image_pub = ImagePub()
     except Exception as e:
