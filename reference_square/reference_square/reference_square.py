@@ -4,6 +4,7 @@ from . import calibration
 
 from transforms3d import euler
 from rclpy.node import Node
+from rclpy.time import Time, Duration
 
 from sensor_msgs.msg import Image, CameraInfo
 from geometry_msgs.msg import Polygon, Point32
@@ -21,13 +22,14 @@ class ReferenceSquareNode(Node):
     Args:
         Node (Node): ROS2 нода.
     """
+    # Предельное время пока навигационные данные считаются свежими
+    DurationLimitOdom = Duration(seconds=0.5)
 
     def __init__(self):
         """Инициализация объектов."""
         super().__init__('reference_square')
         self._br = CvBridge()
         self._projection_square_side = 1  # В метрах
-        self._id = id
 
         self._сamera_info_subscription = self.create_subscription(
             CameraInfo, '/solaster/front_camera/config', self.camera_info_callback, 10)
@@ -42,9 +44,9 @@ class ReferenceSquareNode(Node):
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
-        self._euler_angles = []
-        self._convert_mtx = []
-        self._image = []
+        self._euler_angles = None
+        self._convert_mtx = None
+        self._image = None
 
     def odom_callback(self, msg: Odometry):
         """
@@ -62,18 +64,16 @@ class ReferenceSquareNode(Node):
         orientation = [pose_data.orientation.w, pose_data.orientation.x,
                        pose_data.orientation.y, pose_data.orientation.z]
         degrees = []
+
         # Преобразовываем ориентацию в повороты Эйлера и переводим из радиан в градусы
-        try:
-            angles = euler.quat2euler(orientation)
-        except Exception:
-            return
+        angles = euler.quat2euler(orientation)
 
         for angle in angles:
             degrees.append(math.degrees(angle))
 
         self._euler_angles = degrees
 
-        self._odom_timestump = msg._header._stamp.nanosec + msg._header._stamp.sec*(10**9)
+        self._last_stamp_odom = Time.from_msg(msg.header.stamp)
 
     def camera_info_callback(self, msg: CameraInfo):
         """
@@ -104,14 +104,22 @@ class ReferenceSquareNode(Node):
             return
 
     def timer_callback(self):
-        """Построение проекционного квадрата."""
-        if len(self._euler_angles) == 0 or len(self._convert_mtx) == 0 or len(self._image) == 0:
-            print("error")
+        """Построение проекционного квадрата"""
+        if self._euler_angles is None:
+            self.get_logger().warning("No navigation data for making reference square")
             return
 
-        time = self.get_clock().now().nanoseconds
-        if self._odom_timestump + 10**9 < time:
-            print("error")
+        if self._convert_mtx is None:
+            self.get_logger().warning("No camera info for making reference square")
+            return
+
+        if self._image is None:
+            self.get_logger().warning("No camera image for making reference square")
+            return
+
+        last_odom_dutation = self.get_clock().now() - self._last_stamp_odom
+        if last_odom_dutation > self.DurationLimitOdom:
+            self.get_logger().warning("Odometry data too old for making reference square")
             return
 
         msg = Polygon()

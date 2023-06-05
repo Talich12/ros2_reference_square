@@ -48,9 +48,8 @@ class ImagePub(Node):
             raise Exception("Test image is corrupt")
 
     def timer_callback(self):
-        """Публикация изображения."""
-        self.get_logger().info(f'Send test image')
         self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image, encoding='rgb8'))
+        self.get_logger().info('Send test image')
 
 
 def main(args=None):
@@ -60,7 +59,7 @@ def main(args=None):
         args (any, optional): Входящие аргументы. Defaults to None.
     """
     rclpy.init(args=args)
-    
+
     try:
         image_pub = ImagePub()
     except Exception as e:

@@ -30,8 +30,8 @@ class OdomPub(Node):
         msg.pose.pose.orientation.y = 0.1727661
         msg.pose.pose.orientation.z = 0.
         msg.pose.pose.orientation.w = 0.9696926
-        self.get_logger().info(f'{msg}')
         self._publisher_.publish(msg)
+        self.get_logger().info('Send test odometry data')
 
 
 def main(args=None):
