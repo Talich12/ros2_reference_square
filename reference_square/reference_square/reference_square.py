@@ -48,6 +48,8 @@ class ReferenceSquareNode(Node):
         self._convert_mtx = None
         self._image = None
 
+        self._i = 1
+
     def odom_callback(self, msg: Odometry):
         """
         Получить данные положения апарата в пространстве.
@@ -137,6 +139,7 @@ class ReferenceSquareNode(Node):
         Rx = calibration.get_Rx(self._euler_angles[0])
         Ry = calibration.get_Ry(self._euler_angles[1])
 
+
         # Переводим в расстояние до дна в матрицу 1x3
         T = np.array([0, 0, self._pose[2], ])[:, None]
 
@@ -189,7 +192,12 @@ class ReferenceSquareNode(Node):
         except Exception:
             return
         img = cv.polylines(img, [polyline_pts], True, (0, 255, 0), 2)
-        cv.imwrite('reference_square.jpg', img)
+
+        color_blue = (255, 0, 0)
+        cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}", (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 2)
+        cv.imwrite(f'reference_square_{self._i}.jpg', img)
+        self._i += 1
+
 
         self.get_logger().info(f'send_reference_square')
         self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))

@@ -19,17 +19,22 @@ class OdomPub(Node):
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
+        self.declare_parameter('step', 0.2)
+        self._step = self.get_parameter('step').get_parameter_value().double_value
+
     def timer_callback(self):
         """Публикация данных позиции и ориентации."""
         msg = Odometry()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.pose.pose.position.x = 1.
         msg.pose.pose.position.y = 2.
-        msg.pose.pose.position.z = 2.
+        msg.pose.pose.position.z = 0.2 + float(self._step)
         msg.pose.pose.orientation.x = 0.1727661
         msg.pose.pose.orientation.y = 0.1727661
         msg.pose.pose.orientation.z = 0.
         msg.pose.pose.orientation.w = 0.9696926
+
+        self._step += self.get_parameter('step').get_parameter_value().double_value
         self._publisher_.publish(msg)
         self.get_logger().info('Send test odometry data')
 
