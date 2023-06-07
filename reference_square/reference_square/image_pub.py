@@ -12,18 +12,23 @@ from cv_bridge import CvBridge
 
 
 class ImagePub(Node):
-    """Класс ноды публикации тестового изображения.
+    """
+    Класс ноды публикации тестового изображения.
 
-    Args:
+    Args
+    ----
         Node (Node): ROS2 нода.
     """
 
     def __init__(self):
-        """Инициализация объектов и запись изображения в cv2.
+        """
+        Инициализация объектов и запись изображения в cv2.
 
-        Raises:
+        Raises
+        ------
             Exception: Исключение на существование файла изображения.
             Exception: Исключение на корректное открытие изображения.
+
         """
         self.br = CvBridge()
         super().__init__('test_image_publisher')
@@ -53,9 +58,11 @@ class ImagePub(Node):
 
 
 def main(args=None):
-    """Инициализация ноды и запуск.
+    """
+    Инициализация ноды и запуск.
 
-    Args:
+    Args
+    ----
         args (any, optional): Входящие аргументы. Defaults to None.
     """
     rclpy.init(args=args)

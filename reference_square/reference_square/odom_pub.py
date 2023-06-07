@@ -6,7 +6,8 @@ from nav_msgs.msg import Odometry
 
 
 class OdomPub(Node):
-    """Класс ноды публикации данных позиции и ориенации.
+    """
+    Класс ноды публикации данных позиции и ориенации.
 
     Args:
         Node (Node): ROS2 нода.
@@ -40,9 +41,12 @@ class OdomPub(Node):
 
 
 def main(args=None):
-    """Инициализация ноды и запуск.
+    """
+    Инициализация ноды и запуск.
 
-    Args:
+    Args
+    ----
+        
         args (any, optional): Входящие аругменты. Defaults to None.
     """
     rclpy.init(args=args)

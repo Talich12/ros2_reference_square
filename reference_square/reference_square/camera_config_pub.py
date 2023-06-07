@@ -6,9 +6,11 @@ from sensor_msgs.msg import CameraInfo
 
 
 class CameraConfigPub(Node):
-    """Класс ноды публикации данных математической модели камеры.
+    """
+    Класс ноды публикации данных математической модели камеры.
 
-    Args:
+    Args
+    ----
         Node (Node): ROS2 нода.
     """
 
@@ -47,9 +49,11 @@ class CameraConfigPub(Node):
 
 
 def main(args=None):
-    """Инициализация ноды и запуск.
+    """
+    Инициализация ноды и запуск.
 
-    Args:
+    Args
+    ----
         args (any, optional): входные параметры. Defaults to None.
     """
     rclpy.init(args=args)

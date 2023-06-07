@@ -2,6 +2,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node, PushRosNamespace
 from launch.actions import GroupAction
 
+
 def generate_launch_description():
     namespace = 'solaster'
 
@@ -10,7 +11,7 @@ def generate_launch_description():
                                  output='screen',
                                  emulate_tty=True
                                  )
-    
+
     test_odom_pub = Node(package='reference_square',
                          executable='odom_pub',
                          output='screen',
@@ -22,7 +23,7 @@ def generate_launch_description():
                                 output='screen',
                                 emulate_tty=True
                                 )
-    
+
     test_image_pub = Node(package='reference_square',
                           executable='reference_square',
                           output='screen',

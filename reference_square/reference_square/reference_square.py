@@ -17,11 +17,13 @@ from cv_bridge import CvBridge
 
 
 class ReferenceSquareNode(Node):
-    """Класс ноды построения проекционного квадрата.
-    
+    """
+    Класс ноды построения проекционного квадрата.
+
     Args:
         Node (Node): ROS2 нода.
     """
+
     # Предельное время пока навигационные данные считаются свежими
     DurationLimitOdom = Duration(seconds=0.5)
 
@@ -38,8 +40,8 @@ class ReferenceSquareNode(Node):
         self._odom_subscription = self.create_subscription(
             Odometry, '/solaster/odom', self.odom_callback, 10)
 
-        self._image_publisher = self.create_publisher(Image, "topic_image", 10)
-        self._polygon_publisher = self.create_publisher(Polygon, 'topic_polygon', 10)
+        self._image_publisher = self.create_publisher(Image, '/solaster/topic_image', 10)
+        self._polygon_publisher = self.create_publisher(Polygon, '/solaster/topic_poligon', 10)
 
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
@@ -106,7 +108,7 @@ class ReferenceSquareNode(Node):
             return
 
     def timer_callback(self):
-        """Построение проекционного квадрата"""
+        """Построение проекционного квадрата."""
         if self._euler_angles is None:
             self.get_logger().warning("No navigation data for making reference square")
             return
@@ -138,7 +140,6 @@ class ReferenceSquareNode(Node):
         # Преобразовываем углы Эйлера в матрицы поворота
         Rx = calibration.get_Rx(self._euler_angles[0])
         Ry = calibration.get_Ry(self._euler_angles[1])
-
 
         # Переводим в расстояние до дна в матрицу 1x3
         T = np.array([0, 0, self._pose[2], ])[:, None]
@@ -191,13 +192,13 @@ class ReferenceSquareNode(Node):
             img = self._image
         except Exception:
             return
-        img = cv.polylines(img, [polyline_pts], True, (0, 255, 0), 2)
+        img = cv.polylines(img, [polyline_pts], True, (0, 255, 0), 4)
 
         color_blue = (255, 0, 0)
-        cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}", (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 2)
+        cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}",
+                   (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
         cv.imwrite(f'reference_square_{self._i}.jpg', img)
-        self._i += 1
-
+        # self._i += 1
 
         self.get_logger().info(f'send_reference_square')
         self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
@@ -208,9 +209,11 @@ class ReferenceSquareNode(Node):
 
 
 def main(args=None):
-    """Инициализация ноды и запуск.
+    """
+    Инициализация ноды и запуск.
 
-    Args:
+    Args
+    ----
         args (any, optional): Входящие аргументы. Defaults to None.
     """
     rclpy.init(args=args)

@@ -13,7 +13,8 @@ class CameraCalibFile:
         self._conv_mtx = None
 
     def load_calibration(self, mtx, dist):
-        """Сохранение матрицы проекционной модели камеры и коэффициенты дисторсии.
+        """
+        Сохранение матрицы проекционной модели камеры и коэффициенты дисторсии.
 
         Args:
             mtx (float[3][3]): Матрица искажения.
@@ -23,18 +24,24 @@ class CameraCalibFile:
         self._dist = dist
 
     def get_mtx(self):
-        """Получить матрицу описывающую проекционную модель камеры.
+        """
+        Получить матрицу описывающую проекционную модель камеры.
 
-        Returns:
+        Returns
+        -------
             float[3][3]: Матрица проекционной модели камеры.
+
         """
         return self._mtx
 
     def get_dist(self):
-        """Получить коэффициенты дистросии камеры.
+        """
+        Получить коэффициенты дистросии камеры.
 
-        Returns:
+        Returns
+        -------
             float[5]: Коэффициенты дисторсии.
+
         """
         return self._dist
 
@@ -48,14 +55,18 @@ class CameraCalibFile:
         self._conv_mtx = np.array(self._conv_mtx)
 
     def coords_conversion(self, world_coords, R=None):
-        """Перевод мировых координат в координаты камеры.
+        """
+        Перевод мировых координат в координаты камеры.
 
-        Args:
+        Args
+        ----
             world_coords (float[3]): Координаты точки в мировых координатах (x, y, z).
             R (float[4][4], optional): Общая матрица преоброзаваний. Defaults to None.
 
-        Returns:
+        Returns
+        -------
             float[2]: Координаты точки в координатах камеры.
+
         """
         world_coords.append(1)
         homo_word_coords = np.array(world_coords)[:, None]
@@ -70,10 +81,13 @@ class CameraCalibFile:
         return image_coords
 
     def get_Cxy(self):
-        """Получить коэффициенты смещения из матрицы проекционной модели камеры.
+        """
+        Получить коэффициенты смещения из матрицы проекционной модели камеры.
 
-        Returns:
+        Returns
+        -------
             float[2]: Массив с коэффициентами смещения.
+
         """
         Cxy = np.array([self._mtx[0][2], self._mtx[1][2]])
 
@@ -81,13 +95,17 @@ class CameraCalibFile:
 
 
 def get_Rx(x_axis_angle):
-    """Получить матрицу поворота по оси x.
+    """
+    Получить матрицу поворота по оси x.
 
-    Args:
+    Args
+    ----
         x_axis_angle (float): Значение угла поворота по оси x в градусах.
 
-    Returns:
+    Returns
+    -------
         float[3][3]: Матрица поворота по оси x.
+
     """
     x_axis_angle = np.radians(x_axis_angle)
 
@@ -101,13 +119,17 @@ def get_Rx(x_axis_angle):
 
 
 def get_Ry(y_axis_angle):
-    """Получить матрицу поворота по оси y.
+    """
+    Получить матрицу поворота по оси y.
 
-    Args:
+    Args
+    ----
         y_axis_angle (float): Значение угла поворота по оси y в градусах.
 
-    Returns:
+    Returns
+    -------
         float[3][3]: Матрица поворота по оси y.
+
     """
     y_axis_angle = np.radians(y_axis_angle)
 
@@ -122,15 +144,19 @@ def get_Ry(y_axis_angle):
 
 
 def get_RT(Rx, Ry, T):
-    """Получить общую матрицу преоброзований в гомогенных координатах.
+    """
+    Получить общую матрицу преоброзований в гомогенных координатах.
 
-    Args:
+    Args
+    ----
         Rx (float[3][3]): Матрица поворота по оси x.
         Ry (float[3][3]): Матрица поворота по оси y.
         T (float[3][1]): Дополнительная матрица смещения.
 
-    Returns:
+    Returns
+    -------
         float[4][4]: Общая матрица преоброзований в гомогенных координатах.
+
     """
     R = Rx.dot(Ry)
     R = np.hstack([R, T])
