@@ -33,15 +33,20 @@ class ReferenceSquareNode(Node):
         self._br = CvBridge()
         self._projection_square_side = 1  # В метрах
 
-        self._сamera_info_subscription = self.create_subscription(
-            CameraInfo, '/solaster/front_camera/config', self.camera_info_callback, 10)
-        self._image_subscription = self.create_subscription(
-            Image, '/solaster/front_camera/image', self.image_callback, 10)
-        self._odom_subscription = self.create_subscription(
-            Odometry, '/solaster/odom', self.odom_callback, 10)
+        self._namespace = self.get_namespace()
+        if self._namespace != '':
+            if self._namespace[-1] != '/':
+                self._namespace += '/'
 
-        self._image_publisher = self.create_publisher(Image, '/solaster/topic_image', 10)
-        self._polygon_publisher = self.create_publisher(Polygon, '/solaster/topic_poligon', 10)
+            if self._namespace[0] != '/':
+                self._namespace = '/' + self._namespace
+
+        self._сamera_info_subscription = self.create_subscription(CameraInfo, self._namespace + 'config', self.camera_info_callback, 10)
+        self._image_subscription = self.create_subscription(Image,  self._namespace + 'image', self.image_callback, 10)
+        self._odom_subscription = self.create_subscription(Odometry,  self._namespace + 'odom', self.odom_callback, 10)
+
+        self._image_publisher = self.create_publisher(Image, self._namespace + 'reference_square/image', 10)
+        self._polygon_publisher = self.create_publisher(Polygon, self._namespace + 'reference_square/poligon', 10)
 
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)

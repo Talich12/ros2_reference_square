@@ -17,8 +17,17 @@ class CameraConfigPub(Node):
     def __init__(self):
         """ИНициализация объектов."""
         super().__init__('test_config_publisher')
-        self._camera_info_publisher = self.create_publisher(
-            CameraInfo, '/solaster/front_camera/config', 10)
+
+
+        self._namespace = self.get_namespace()
+        if self._namespace != '':
+            if self._namespace[-1] != '/':
+                self._namespace += '/'
+
+            if self._namespace[0] != '/':
+                self._namespace = '/' + self._namespace
+
+        self._camera_info_publisher = self.create_publisher(CameraInfo, self._namespace + 'config', 10)
 
         timer_period = 1.0  # [c]
         self._timer = self.create_timer(timer_period, self.timer_callback)

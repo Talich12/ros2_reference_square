@@ -30,9 +30,19 @@ class ImagePub(Node):
             Exception: Исключение на корректное открытие изображения.
 
         """
-        self.br = CvBridge()
         super().__init__('test_image_publisher')
-        self._publisher = self.create_publisher(Image, '/solaster/front_camera/image', 10)
+        self.br = CvBridge()
+
+        self._namespace = self.get_namespace()
+        if self._namespace != '':
+            if self._namespace[-1] != '/':
+                self._namespace += '/'
+
+            if self._namespace[0] != '/':
+                self._namespace = '/' + self._namespace
+
+
+        self._publisher = self.create_publisher(Image, self._namespace +'image', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 

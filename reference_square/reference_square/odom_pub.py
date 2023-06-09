@@ -19,7 +19,16 @@ class OdomPub(Node):
     def __init__(self):
         """Инициализация объектов."""
         super().__init__('test_odom_publisher')
-        self._publisher_ = self.create_publisher(Odometry, '/solaster/odom', 10)
+
+        self._namespace = self.get_namespace()
+        if self._namespace != '':
+            if self._namespace[-1] != '/':
+                self._namespace += '/'
+
+            if self._namespace[0] != '/':
+                self._namespace = '/' + self._namespace
+
+        self._publisher_ = self.create_publisher(Odometry, self._namespace + 'odom', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
         
