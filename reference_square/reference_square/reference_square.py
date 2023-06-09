@@ -195,10 +195,10 @@ class ReferenceSquareNode(Node):
         img = cv.polylines(img, [polyline_pts], True, (0, 255, 0), 4)
 
         color_blue = (255, 0, 0)
-        cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}",
-                   (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
+        cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}", (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
+        cv.putText(img, f"x_or:{self._euler_angles[0]} y_or:{self._euler_angles[1]}, z_or:{self._euler_angles[2]}", (20, 100), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
         cv.imwrite(f'reference_square_{self._i}.jpg', img)
-        # self._i += 1
+        self._i += 1
 
         self.get_logger().info(f'send_reference_square')
         self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
