@@ -18,7 +18,7 @@ class OdomPub(Node):
 
     def __init__(self):
         """Инициализация объектов."""
-        super().__init__('test_odom_publisher')
+        super().__init__('test_odom_publisher',  allow_undeclared_parameters=True, automatically_declare_parameters_from_overrides=True)
 
         self._namespace = self.get_namespace()
         if self._namespace != '':
@@ -32,12 +32,19 @@ class OdomPub(Node):
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
         
-        # Добавление параметров
-        self.declare_parameter('start_pos', [0., 0., 0.2]) # Начальное положение в формате (orientation.x (градусы), orientation.y (градусы), posititon.z)
-        self.declare_parameter('step_pos', [5., 5., 0.2]) # Шаг в изменении каждого параметра в формате (orientation.x (градусы), orientation.y (градусы), posititon.z)
-
+        # Принимаем параметры из reference_square.launch.py
         self._start_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value
-        self._step_pos = self.get_parameter('step_pos').get_parameter_value().double_array_value
+        
+        if len(self._start_pos) != 3:
+            print("Параметр start_pos не задан, устанавливается значение [0, 0, 0]")
+            self._start_pos = [0., 0., 0.]
+
+        self._step_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value            
+
+        if len(self._step_pos) != 3:
+            print("Параметр step_pos не задан, устанавливается значение [0, 0, 0]")
+            self._step_pos = [0., 0., 0.]
+            
 
         # Перевод градусов в радианы
         for i in range(0, 2):
