@@ -7,15 +7,19 @@ def generate_launch_description():
     namespace = 'solaster'
 
     reference_square_node = Node(package='reference_square',
-                                 executable='image_pub',
+                                 executable='reference_square',
                                  output='screen',
-                                 emulate_tty=True
+                                 emulate_tty=True,
+                                 parameters=[{"debug": True}]
                                  )
 
     test_odom_pub = Node(package='reference_square',
                          executable='odom_pub',
                          output='screen',
-                         emulate_tty=True
+                         emulate_tty=True,
+                         parameters=[{"start_pos": [0., 0., 0.2]},
+                                     {"step_pos": [0., 0., 0.2]}
+                                     ]
                          )
 
     test_camera_info_pub = Node(package='reference_square',
@@ -25,7 +29,7 @@ def generate_launch_description():
                                 )
 
     test_image_pub = Node(package='reference_square',
-                          executable='reference_square',
+                          executable='image_pub',
                           output='screen',
                           emulate_tty=True
                           )
