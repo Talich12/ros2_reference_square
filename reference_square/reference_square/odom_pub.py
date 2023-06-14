@@ -7,7 +7,6 @@ from transforms3d import euler, quaternions
 import math
 
 
-
 class OdomPub(Node):
     """
     Класс ноды публикации данных позиции и ориенации.
@@ -31,20 +30,19 @@ class OdomPub(Node):
         self._publisher_ = self.create_publisher(Odometry, self._namespace + 'odom', 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
-        
+
         # Принимаем параметры из reference_square.launch.py
         self._start_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value
-        
+
         if len(self._start_pos) != 3:
             print("Параметр start_pos не задан, устанавливается значение [0, 0, 0]")
             self._start_pos = [0., 0., 0.]
 
-        self._step_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value            
+        self._step_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value
 
         if len(self._step_pos) != 3:
             print("Параметр step_pos не задан, устанавливается значение [0, 0, 0]")
             self._step_pos = [0., 0., 0.]
-            
 
         # Перевод градусов в радианы
         for i in range(0, 2):
@@ -69,9 +67,8 @@ class OdomPub(Node):
 
         # Умножение кватернионов чтобы сохранить результат шага
         self._start_orientation_quat = quaternions.qmult(self._start_orientation_quat, self._step_orientation_quat)
-        
-        self._start_pos[2] += self._step_pos[2]
 
+        self._start_pos[2] += self._step_pos[2]
 
         self._publisher_.publish(msg)
         self.get_logger().info('Send test odometry data')
@@ -83,7 +80,7 @@ def main(args=None):
 
     Args
     ----
-        
+
         args (any, optional): Входящие аругменты. Defaults to None.
     """
     rclpy.init(args=args)

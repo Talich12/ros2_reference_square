@@ -18,7 +18,6 @@ class CameraConfigPub(Node):
         """ИНициализация объектов."""
         super().__init__('test_config_publisher')
 
-
         self._namespace = self.get_namespace()
         if self._namespace != '':
             if self._namespace[-1] != '/':

@@ -30,6 +30,7 @@ class ReferenceSquareNode(Node):
     def __init__(self):
         """Инициализация объектов."""
         super().__init__('reference_square', allow_undeclared_parameters=True, automatically_declare_parameters_from_overrides=True)
+
         self._br = CvBridge()
         self._projection_square_side = 1  # В метрах
 
@@ -43,7 +44,6 @@ class ReferenceSquareNode(Node):
 
         # Принимаем параметр из reference_square.launch.py
         self._debug = self.get_parameter('debug').get_parameter_value().bool_value
-
 
         self._сamera_info_subscription = self.create_subscription(CameraInfo, self._namespace + 'config', self.camera_info_callback, 10)
         self._image_subscription = self.create_subscription(Image,  self._namespace + 'image', self.image_callback, 10)
@@ -203,11 +203,11 @@ class ReferenceSquareNode(Node):
             return
         img = cv.polylines(img, [polyline_pts], True, (0, 255, 0), 4)
 
-        if self._debug:            
+        if self._debug:
             color_blue = (255, 0, 0)
             cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}", (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
             cv.putText(img, f"x_or:{self._euler_angles[0]} y_or:{self._euler_angles[1]}, z_or:{self._euler_angles[2]}", (20, 100), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
-        
+
         cv.imwrite(f'reference_square_{self._i}.jpg', img)
         self._i += 1
 
