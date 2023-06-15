@@ -29,7 +29,9 @@ class ReferenceSquareNode(Node):
 
     def __init__(self):
         """Инициализация объектов."""
-        super().__init__('reference_square', allow_undeclared_parameters=True, automatically_declare_parameters_from_overrides=True)
+        super().__init__('reference_square',
+                         allow_undeclared_parameters=True,
+                         automatically_declare_parameters_from_overrides=True)
 
         self._br = CvBridge()
         self._projection_square_side = 1  # В метрах
@@ -45,12 +47,18 @@ class ReferenceSquareNode(Node):
         # Принимаем параметр из reference_square.launch.py
         self._debug = self.get_parameter('debug').get_parameter_value().bool_value
 
-        self._сamera_info_subscription = self.create_subscription(CameraInfo, self._namespace + 'config', self.camera_info_callback, 10)
-        self._image_subscription = self.create_subscription(Image,  self._namespace + 'image', self.image_callback, 10)
-        self._odom_subscription = self.create_subscription(Odometry,  self._namespace + 'odom', self.odom_callback, 10)
+        self._сamera_info_subscription = self.create_subscription(CameraInfo,
+                                                                  self._namespace + 'config',
+                                                                  self.camera_info_callback, 10)
+        self._image_subscription = self.create_subscription(Image,  self._namespace + 'image',
+                                                            self.image_callback, 10)
+        self._odom_subscription = self.create_subscription(Odometry,  self._namespace + 'odom',
+                                                           self.odom_callback, 10)
 
-        self._image_publisher = self.create_publisher(Image, self._namespace + 'reference_square/image', 10)
-        self._polygon_publisher = self.create_publisher(Polygon, self._namespace + 'reference_square/poligon', 10)
+        self._image_publisher = self.create_publisher(
+            Image, self._namespace + 'reference_square/image', 10)
+        self._polygon_publisher = self.create_publisher(
+            Polygon, self._namespace + 'reference_square/poligon', 10)
 
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
@@ -189,7 +197,7 @@ class ReferenceSquareNode(Node):
             msg.points.append(p)
 
         self._polygon_publisher.publish(msg)
-        self.get_logger().info(f'send_polygon')
+        self.get_logger().info('send_polygon')
 
         # Колибруем все точки
         polyline_pts = [(r_frame - trans_vec).astype(int) for r_frame in polyline_pts]
@@ -205,13 +213,16 @@ class ReferenceSquareNode(Node):
 
         if self._debug:
             color_blue = (255, 0, 0)
-            cv.putText(img, f"x:{self._pose[0]} y:{self._pose[1]}, z:{self._pose[2]}", (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
-            cv.putText(img, f"x_or:{self._euler_angles[0]} y_or:{self._euler_angles[1]}, z_or:{self._euler_angles[2]}", (20, 100), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
+            cv.putText(img, 'x:{} y:{}, z:{}'.format(self._pose[0], self._pose[1], self._pose[2]),
+                       (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
+            cv.putText(img, 'x_or:{} y_or:{}, z_or:{}'.
+                       format(self._euler_angles[0], self._euler_angles[1], self._euler_angles[2]),
+                       (20, 100), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
 
         cv.imwrite(f'reference_square_{self._i}.jpg', img)
         self._i += 1
 
-        self.get_logger().info(f'send_reference_square')
+        self.get_logger().info('send_reference_square')
         self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
 
         self._euler_angles = []

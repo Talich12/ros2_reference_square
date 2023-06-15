@@ -17,7 +17,9 @@ class OdomPub(Node):
 
     def __init__(self):
         """Инициализация объектов."""
-        super().__init__('test_odom_publisher',  allow_undeclared_parameters=True, automatically_declare_parameters_from_overrides=True)
+        super().__init__('test_odom_publisher',
+                         allow_undeclared_parameters=True,
+                         automatically_declare_parameters_from_overrides=True)
 
         self._namespace = self.get_namespace()
         if self._namespace != '':
@@ -66,7 +68,8 @@ class OdomPub(Node):
         msg.pose.pose.orientation.w = self._start_orientation_quat[0]
 
         # Умножение кватернионов чтобы сохранить результат шага
-        self._start_orientation_quat = quaternions.qmult(self._start_orientation_quat, self._step_orientation_quat)
+        self._start_orientation_quat = quaternions.qmult(self._start_orientation_quat,
+                                                         self._step_orientation_quat)
 
         self._start_pos[2] += self._step_pos[2]
 
