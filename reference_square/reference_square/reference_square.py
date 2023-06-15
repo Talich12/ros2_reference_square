@@ -21,7 +21,9 @@ class ReferenceSquareNode(Node):
     Класс ноды построения проекционного квадрата.
 
     Args:
+    ----
         Node (Node): ROS2 нода.
+
     """
 
     # Предельное время пока навигационные данные считаются свежими
@@ -74,7 +76,9 @@ class ReferenceSquareNode(Node):
         Получить данные положения апарата в пространстве.
 
         Args:
+        ----
             msg (Odometry): Данные о позиции и ориентации.
+
         """
         pose_data = msg.pose.pose
         # Переводим позицию в массив в формате [x,y,z]
@@ -101,7 +105,9 @@ class ReferenceSquareNode(Node):
         Получить данные конфига камеры.
 
         Args:
+        ----
             msg (CameraInfo): Данные конфига камеры.
+
         """
         # Переводим массив искажения msg.k [float[9]] в матрицу 3x3
         mtx = [[msg.k[0], msg.k[1], msg.k[2]],
@@ -116,7 +122,9 @@ class ReferenceSquareNode(Node):
         Получить изображение.
 
         Args:
+        ----
             msg (Image): Изображение.
+
         """
         # Преобразовываем msg (Image) в cv2 объект
         try:
@@ -234,9 +242,10 @@ def main(args=None):
     """
     Инициализация ноды и запуск.
 
-    Args
+    Args:
     ----
         args (any, optional): Входящие аргументы. Defaults to None.
+
     """
     rclpy.init(args=args)
 

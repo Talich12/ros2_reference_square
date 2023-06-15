@@ -9,9 +9,10 @@ class CameraConfigPub(Node):
     """
     Класс ноды публикации данных математической модели камеры.
 
-    Args
+    Args:
     ----
         Node (Node): ROS2 нода.
+
     """
 
     def __init__(self):
@@ -61,9 +62,10 @@ def main(args=None):
     """
     Инициализация ноды и запуск.
 
-    Args
+    Args:
     ----
         args (any, optional): входные параметры. Defaults to None.
+
     """
     rclpy.init(args=args)
 

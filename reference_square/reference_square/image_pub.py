@@ -15,9 +15,10 @@ class ImagePub(Node):
     """
     Класс ноды публикации тестового изображения.
 
-    Args
+    Args:
     ----
         Node (Node): ROS2 нода.
+
     """
 
     def __init__(self):
@@ -71,9 +72,10 @@ def main(args=None):
     """
     Инициализация ноды и запуск.
 
-    Args
+    Args:
     ----
         args (any, optional): Входящие аргументы. Defaults to None.
+
     """
     rclpy.init(args=args)
 

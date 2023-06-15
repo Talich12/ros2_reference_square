@@ -12,7 +12,9 @@ class OdomPub(Node):
     Класс ноды публикации данных позиции и ориенации.
 
     Args:
+    ----
         Node (Node): ROS2 нода.
+
     """
 
     def __init__(self):
@@ -81,10 +83,10 @@ def main(args=None):
     """
     Инициализация ноды и запуск.
 
-    Args
+    Args:
     ----
-
         args (any, optional): Входящие аругменты. Defaults to None.
+
     """
     rclpy.init(args=args)
 
