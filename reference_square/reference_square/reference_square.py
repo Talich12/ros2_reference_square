@@ -58,7 +58,6 @@ class ReferenceSquareNode(Node):
             self._convert_mtx = None
 
         else:
-            print(self._mtx)
             mtx = [[self._mtx[0], self._mtx[1], self._mtx[2]],
                [self._mtx[3], self._mtx[4], self._mtx[5]],
                [self._mtx[6], self._mtx[7], self._mtx[8]]]
@@ -128,7 +127,6 @@ class ReferenceSquareNode(Node):
         # Принимаем дисторсию msg.d [float[5]]
         self._distortion = msg.d
         self._convert_mtx = mtx
-        print("BLABLABLA")
 
     def image_callback(self, msg: Image):
         """
