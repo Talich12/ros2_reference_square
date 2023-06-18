@@ -48,10 +48,23 @@ class ReferenceSquareNode(Node):
 
         # Принимаем параметр из reference_square.launch.py
         self._debug = self.get_parameter('debug').get_parameter_value().bool_value
+        self._mtx = self.get_parameter('mtx').get_parameter_value().double_array_value
+        self._dist = self.get_parameter('dist').get_parameter_value().double_array_value
 
-        self._сamera_info_subscription = self.create_subscription(CameraInfo,
-                                                                  self._namespace + 'config',
-                                                                  self.camera_info_callback, 10)
+        if len(self._mtx) !=9 or len(self._dist) !=5: 
+            self._сamera_info_subscription = self.create_subscription(CameraInfo,
+                                                                    self._namespace + 'config',
+                                                                    self.camera_info_callback, 10)
+            self._convert_mtx = None
+
+        else:
+            print(self._mtx)
+            mtx = [[self._mtx[0], self._mtx[1], self._mtx[2]],
+               [self._mtx[3], self._mtx[4], self._mtx[5]],
+               [self._mtx[6], self._mtx[7], self._mtx[8]]]
+            self._convert_mtx = mtx
+            self._distortion = self._dist
+
         self._image_subscription = self.create_subscription(Image,  self._namespace + 'image',
                                                             self.image_callback, 10)
         self._odom_subscription = self.create_subscription(Odometry,  self._namespace + 'odom',
@@ -66,7 +79,6 @@ class ReferenceSquareNode(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
         self._euler_angles = None
-        self._convert_mtx = None
         self._image = None
 
         self._i = 1
@@ -116,6 +128,7 @@ class ReferenceSquareNode(Node):
         # Принимаем дисторсию msg.d [float[5]]
         self._distortion = msg.d
         self._convert_mtx = mtx
+        print("BLABLABLA")
 
     def image_callback(self, msg: Image):
         """
@@ -233,9 +246,6 @@ class ReferenceSquareNode(Node):
         self.get_logger().info('send_reference_square')
         self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
 
-        self._euler_angles = []
-        self._convert_mtx = []
-        self._image = []
 
 
 def main(args=None):
