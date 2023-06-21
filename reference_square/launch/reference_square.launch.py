@@ -20,7 +20,8 @@ def generate_launch_description():
                                  output='screen',
                                  emulate_tty=True,
                                  name='reference_square',
-                                 parameters=[{"debug": True}, config]
+                                 parameters=[{"debug": True},
+                                              config]
                                  )
 
     test_odom_pub = Node(package='reference_square',

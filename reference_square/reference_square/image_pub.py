@@ -42,7 +42,10 @@ class ImagePub(Node):
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
 
-        self._publisher = self.create_publisher(Image, self._namespace + 'image', 10)
+        self._publisher = self.create_publisher(Image,
+                                                self._namespace + 'image',
+                                                10)
+
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -64,7 +67,8 @@ class ImagePub(Node):
 
     def timer_callback(self):
         """Публикация изображения."""
-        self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image, encoding='rgb8'))
+        self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image,
+                                                      encoding='rgb8'))
         self.get_logger().info('Send test image')
 
 

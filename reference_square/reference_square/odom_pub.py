@@ -31,7 +31,9 @@ class OdomPub(Node):
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
 
-        self._publisher_ = self.create_publisher(Odometry, self._namespace + 'odom', 10)
+        self._publisher_ = self.create_publisher(Odometry,
+                                                 self._namespace + 'odom',
+                                                 10)
         timer_period = 1  # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -54,8 +56,13 @@ class OdomPub(Node):
             self._step_pos[i] = math.radians(self._step_pos[i])
 
         # Перевод поворота в кватернион
-        self._start_orientation_quat = euler.euler2quat(self._start_pos[0], self._start_pos[1], 0)
-        self._step_orientation_quat = euler.euler2quat(self._step_pos[0], self._step_pos[1], 0)
+        self._start_orientation_quat = euler.euler2quat(self._start_pos[0],
+                                                        self._start_pos[1],
+                                                        0)
+
+        self._step_orientation_quat = euler.euler2quat(self._step_pos[0],
+                                                       self._step_pos[1],
+                                                       0)
 
     def timer_callback(self):
         """Публикация данных позиции и ориентации."""

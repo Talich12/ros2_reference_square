@@ -51,23 +51,29 @@ class ReferenceSquareNode(Node):
         self._mtx = self.get_parameter('mtx').get_parameter_value().double_array_value
         self._dist = self.get_parameter('dist').get_parameter_value().double_array_value
 
-        if len(self._mtx) !=9 or len(self._dist) !=5: 
+        if len(self._mtx) != 9 or len(self._dist) != 5:
             self._сamera_info_subscription = self.create_subscription(CameraInfo,
-                                                                    self._namespace + 'config',
-                                                                    self.camera_info_callback, 10)
+                                                                      self._namespace + 'config',
+                                                                      self.camera_info_callback,
+                                                                      10)
             self._convert_mtx = None
 
         else:
             mtx = [[self._mtx[0], self._mtx[1], self._mtx[2]],
-               [self._mtx[3], self._mtx[4], self._mtx[5]],
-               [self._mtx[6], self._mtx[7], self._mtx[8]]]
+                   [self._mtx[3], self._mtx[4], self._mtx[5]],
+                   [self._mtx[6], self._mtx[7], self._mtx[8]]]
             self._convert_mtx = mtx
             self._distortion = self._dist
 
-        self._image_subscription = self.create_subscription(Image,  self._namespace + 'image',
-                                                            self.image_callback, 10)
-        self._odom_subscription = self.create_subscription(Odometry,  self._namespace + 'odom',
-                                                           self.odom_callback, 10)
+        self._image_subscription = self.create_subscription(Image,
+                                                            self._namespace + 'image',
+                                                            self.image_callback,
+                                                            10)
+
+        self._odom_subscription = self.create_subscription(Odometry,
+                                                           self._namespace + 'odom',
+                                                           self.odom_callback,
+                                                           10)
 
         self._image_publisher = self.create_publisher(
             Image, self._namespace + 'reference_square/image', 10)
@@ -93,7 +99,10 @@ class ReferenceSquareNode(Node):
         """
         pose_data = msg.pose.pose
         # Переводим позицию в массив в формате [x,y,z]
-        pose = [pose_data.position.x, pose_data.position.y, pose_data.position.z]
+        pose = [pose_data.position.x,
+                pose_data.position.y,
+                pose_data.position.z]
+
         self._pose = pose
         # Переводим ориентацию в массив в формате [w,x,y,z]
         # чтобы перевести кватернион в повороты Эйлера
@@ -184,7 +193,8 @@ class ReferenceSquareNode(Node):
         R = calibration.get_RT(Rx, Ry, T)
 
         camera_calibration = calibration.CameraCalibFile()
-        camera_calibration.load_calibration(self._convert_mtx, self._distortion)
+        camera_calibration.load_calibration(self._convert_mtx,
+                                            self._distortion)
 
         # Вытаскиваем элементы смещение из матрицы искажения камеры
         c_frame = camera_calibration.get_Cxy()
@@ -232,18 +242,16 @@ class ReferenceSquareNode(Node):
 
         if self._debug:
             color_blue = (255, 0, 0)
-            cv.putText(img, 'x:{} y:{}, z:{}'.format(self._pose[0], self._pose[1], self._pose[2]),
+            cv.putText(img, 'x:{} y:{}, z:{}'.
+                       format(self._pose[0], self._pose[1], self._pose[2]),
                        (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
+
             cv.putText(img, 'x_or:{} y_or:{}, z_or:{}'.
                        format(self._euler_angles[0], self._euler_angles[1], self._euler_angles[2]),
                        (20, 100), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
 
-        cv.imwrite(f'reference_square_{self._i}.jpg', img)
-        self._i += 1
-
         self.get_logger().info('send_reference_square')
         self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
-
 
 
 def main(args=None):
