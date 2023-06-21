@@ -86,8 +86,6 @@ class ReferenceSquareNode(Node):
         self._euler_angles = None
         self._image = None
 
-        self._i = 1
-
     def odom_callback(self, msg: Odometry):
         """
         Получить данные положения апарата в пространстве.
