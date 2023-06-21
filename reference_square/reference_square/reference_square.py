@@ -80,7 +80,7 @@ class ReferenceSquareNode(Node):
         self._polygon_publisher = self.create_publisher(
             Polygon, self._namespace + 'reference_square/poligon', 10)
 
-        timer_period = 1  # seconds
+        timer_period = self.get_parameter('timer').get_parameter_value().integer_value # seconds
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
         self._euler_angles = None

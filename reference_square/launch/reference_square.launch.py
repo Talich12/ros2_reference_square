@@ -21,7 +21,8 @@ def generate_launch_description():
                                  emulate_tty=True,
                                  name='reference_square',
                                  parameters=[{"debug": True},
-                                              config]
+                                             {"timer": 1},
+                                             config]
                                  )
 
     test_odom_pub = Node(package='reference_square',
