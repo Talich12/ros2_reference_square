@@ -46,13 +46,11 @@ class OdomPub(Node):
             get_parameter_or('start_pos',
                              Parameter(name='name',
                                        value=[0., 0., 0.])).value
-        print(self._start_pos)
 
         self._step_pos = self.\
             get_parameter_or('step_pos',
                              Parameter(name='name',
                                        value=[0., 0., 0.])).value
-        print(self._step_pos)
 
         # Перевод градусов в радианы
         for i in range(0, 2):
