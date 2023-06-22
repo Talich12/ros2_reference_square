@@ -31,7 +31,10 @@ class ImagePub(Node):
             Exception: Исключение на корректное открытие изображения.
 
         """
-        super().__init__('test_image_publisher')
+        super().__init__('test_image_publisher',
+                         allow_undeclared_parameters=True,
+                         automatically_declare_parameters_from_overrides=True)
+
         self.br = CvBridge()
 
         self._namespace = self.get_namespace()
@@ -41,6 +44,8 @@ class ImagePub(Node):
 
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
+
+        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
 
         self._publisher = self.create_publisher(Image,
                                                 self._namespace + 'image',
@@ -69,7 +74,9 @@ class ImagePub(Node):
         """Публикация изображения."""
         self._publisher.publish(self.br.cv2_to_imgmsg(self._test_image,
                                                       encoding='rgb8'))
-        self.get_logger().info('Send test image')
+
+        if self._debug:
+            self.get_logger().info('Send test image')
 
 
 def main(args=None):

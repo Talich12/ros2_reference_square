@@ -17,7 +17,9 @@ class CameraConfigPub(Node):
 
     def __init__(self):
         """Инициализация объектов."""
-        super().__init__('test_config_publisher')
+        super().__init__('test_config_publisher',
+                         allow_undeclared_parameters=True,
+                         automatically_declare_parameters_from_overrides=True)
 
         self._namespace = self.get_namespace()
         if self._namespace != '':
@@ -26,6 +28,8 @@ class CameraConfigPub(Node):
 
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
+
+        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
 
         self._camera_info_publisher = self.create_publisher(CameraInfo,
                                                             self._namespace + 'config', 10)
@@ -55,7 +59,9 @@ class CameraConfigPub(Node):
             4.3384439380592745
         ]
         self._camera_info_publisher.publish(msg)
-        self.get_logger().info('Send test camera info')
+
+        if self._debug:
+            self.get_logger().info('Send test camera info')
 
 
 def main(args=None):

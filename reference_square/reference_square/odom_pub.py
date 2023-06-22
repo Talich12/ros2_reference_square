@@ -31,6 +31,8 @@ class OdomPub(Node):
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
 
+        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
+
         self._publisher_ = self.create_publisher(Odometry,
                                                  self._namespace + 'odom',
                                                  10)
@@ -83,7 +85,9 @@ class OdomPub(Node):
         self._start_pos[2] += self._step_pos[2]
 
         self._publisher_.publish(msg)
-        self.get_logger().info('Send test odometry data')
+
+        if self._debug:
+            self.get_logger().info('Send test odometry data')
 
 
 def main(args=None):
