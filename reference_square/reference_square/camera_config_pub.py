@@ -32,7 +32,8 @@ class CameraConfigPub(Node):
         self._debug = self.get_parameter('debug').get_parameter_value().bool_value
 
         self._camera_info_publisher = self.create_publisher(CameraInfo,
-                                                            self._namespace + 'config', 10)
+                                                            self._namespace + 'config',
+                                                            10)
 
         timer_period = 1.0  # [c]
         self._timer = self.create_timer(timer_period, self.timer_callback)
