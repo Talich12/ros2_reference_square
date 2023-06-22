@@ -43,13 +43,13 @@ class OdomPub(Node):
         self._start_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value
 
         if len(self._start_pos) != 3:
-            print("Параметр start_pos не задан, устанавливается значение [0, 0, 0]")
+            self.get_logger().info("Параметр start_pos не задан, устанавливается значение [0, 0, 0]")
             self._start_pos = [0., 0., 0.]
 
         self._step_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value
 
         if len(self._step_pos) != 3:
-            print("Параметр step_pos не задан, устанавливается значение [0, 0, 0]")
+            self.get_logger().info("Параметр step_pos не задан, устанавливается значение [0, 0, 0]")
             self._step_pos = [0., 0., 0.]
 
         # Перевод градусов в радианы

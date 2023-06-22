@@ -83,6 +83,7 @@ class ReferenceSquareNode(Node):
         timer_period = self.get_parameter('period_image_publish_ms').get_parameter_value().integer_value  # seconds
 
         if timer_period == 0:
+            self.get_logger().info("Параметр period_image_publish_ms не задан, устанавливается значение 1")            
             timer_period = 1
 
         self._timer = self.create_timer(timer_period, self.timer_callback)
