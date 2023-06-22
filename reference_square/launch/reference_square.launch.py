@@ -21,7 +21,7 @@ def generate_launch_description():
                                  emulate_tty=True,
                                  name='reference_square',
                                  parameters=[{"debug": True},
-                                             {"timer": 1},
+                                             {"period_image_publish_ms": 1},
                                              config]
                                  )
 

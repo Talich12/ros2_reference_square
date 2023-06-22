@@ -80,7 +80,11 @@ class ReferenceSquareNode(Node):
         self._polygon_publisher = self.create_publisher(
             Polygon, self._namespace + 'reference_square/poligon', 10)
 
-        timer_period = self.get_parameter('timer').get_parameter_value().integer_value # seconds
+        timer_period = self.get_parameter('period_image_publish_ms').get_parameter_value().integer_value # seconds
+
+        if timer_period == 0:
+            timer_period = 1
+
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
         self._euler_angles = None
@@ -216,11 +220,7 @@ class ReferenceSquareNode(Node):
 
         # Переводим все точки в формат Polygon[Point32[]]
         for point in polyline_pts:
-            p = Point32()
-            p.x = float(point[0])
-            p.y = float(point[1])
-            p.z = 0.
-
+            p = Point32(x = float(point[0]), y = float(point[1]), z = 0.)
             msg.points.append(p)
 
         self._polygon_publisher.publish(msg)
