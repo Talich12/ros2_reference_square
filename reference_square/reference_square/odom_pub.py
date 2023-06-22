@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
+from rclpy.parameter import Parameter
 
 from transforms3d import euler, quaternions
 import math
@@ -41,19 +42,19 @@ class OdomPub(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
         # Принимаем параметры из reference_square.launch.py
-        self._start_pos = self.get_parameter('start_pos').\
-            get_parameter_value().double_array_value
+        self._start_pos = self.get_parameter_or('start_pos',
+                                                [0., 0., 0.])
 
-        if len(self._start_pos) != 3:
-            self.get_logger().info("Параметр start_pos не задан, устанавливается значение [0, 0, 0]")
-            self._start_pos = [0., 0., 0.]
+        if isinstance(self._start_pos, Parameter):
+            self._start_pos = self._start_pos.\
+                get_parameter_value().double_array_value
 
-        self._step_pos = self.get_parameter('step_pos').\
-            get_parameter_value().double_array_value
+        self._step_pos = self.get_parameter_or('step_pos',
+                                               [0., 0., 0.])
 
-        if len(self._step_pos) != 3:
-            self.get_logger().info("Параметр step_pos не задан, устанавливается значение [0, 0, 0]")
-            self._step_pos = [0., 0., 0.]
+        if isinstance(self._step_pos, Parameter):
+            self._step_pos = self._step_pos.\
+                get_parameter_value().double_array_value
 
         # Перевод градусов в радианы
         for i in range(0, 2):

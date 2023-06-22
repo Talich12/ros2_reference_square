@@ -8,6 +8,7 @@ from rclpy.time import Time, Duration
 
 from sensor_msgs.msg import Image, CameraInfo
 from geometry_msgs.msg import Polygon, Point32
+from rclpy.parameter import Parameter
 from nav_msgs.msg import Odometry
 
 import math
@@ -88,12 +89,10 @@ class ReferenceSquareNode(Node):
         self._polygon_publisher = self.create_publisher(
             Polygon, self._namespace + 'reference_square/poligon', 10)
 
-        timer_period = self.get_parameter('period_image_publish_ms').\
-            get_parameter_value().integer_value  # seconds
-
-        if timer_period == 0:
-            self.get_logger().info("Параметр period_image_publish_ms не задан, устанавливается значение 1")
-            timer_period = 1
+        timer_period = self.get_parameter_or('period_image_publish_ms',
+                                             1)  # seconds
+        if isinstance(timer_period, Parameter):
+            timer_period = timer_period.get_parameter_value().integer_value
 
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
