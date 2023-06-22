@@ -14,7 +14,6 @@ def generate_launch_description():
         'config.yaml'
         )
 
-
     reference_square_node = Node(package='reference_square',
                                  executable='reference_square',
                                  output='screen',

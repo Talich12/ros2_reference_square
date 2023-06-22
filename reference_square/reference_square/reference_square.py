@@ -90,9 +90,8 @@ class ReferenceSquareNode(Node):
             Polygon, self._namespace + 'reference_square/poligon', 10)
 
         timer_period = self.get_parameter_or('period_image_publish_ms',
-                                             1)  # seconds
-        if isinstance(timer_period, Parameter):
-            timer_period = timer_period.get_parameter_value().integer_value
+                                             Parameter(name='name',
+                                                       value=1)).value
 
         self._timer = self.create_timer(timer_period, self.timer_callback)
 

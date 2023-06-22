@@ -42,19 +42,17 @@ class OdomPub(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
         # Принимаем параметры из reference_square.launch.py
-        self._start_pos = self.get_parameter_or('start_pos',
-                                                [0., 0., 0.])
+        self._start_pos = self.\
+            get_parameter_or('start_pos',
+                             Parameter(name='name',
+                                       value=[0., 0., 0.])).value
+        print(self._start_pos)
 
-        if isinstance(self._start_pos, Parameter):
-            self._start_pos = self._start_pos.\
-                get_parameter_value().double_array_value
-
-        self._step_pos = self.get_parameter_or('step_pos',
-                                               [0., 0., 0.])
-
-        if isinstance(self._step_pos, Parameter):
-            self._step_pos = self._step_pos.\
-                get_parameter_value().double_array_value
+        self._step_pos = self.\
+            get_parameter_or('step_pos',
+                             Parameter(name='name',
+                                       value=[0., 0., 0.])).value
+        print(self._step_pos)
 
         # Перевод градусов в радианы
         for i in range(0, 2):
