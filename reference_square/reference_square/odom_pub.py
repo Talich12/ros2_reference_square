@@ -31,7 +31,8 @@ class OdomPub(Node):
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
 
-        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
+        self._debug = self.get_parameter('debug').\
+            get_parameter_value().bool_value
 
         self._publisher_ = self.create_publisher(Odometry,
                                                  self._namespace + 'odom',
@@ -40,13 +41,15 @@ class OdomPub(Node):
         self._timer = self.create_timer(timer_period, self.timer_callback)
 
         # Принимаем параметры из reference_square.launch.py
-        self._start_pos = self.get_parameter('start_pos').get_parameter_value().double_array_value
+        self._start_pos = self.get_parameter('start_pos').\
+            get_parameter_value().double_array_value
 
         if len(self._start_pos) != 3:
             self.get_logger().info("Параметр start_pos не задан, устанавливается значение [0, 0, 0]")
             self._start_pos = [0., 0., 0.]
 
-        self._step_pos = self.get_parameter('step_pos').get_parameter_value().double_array_value
+        self._step_pos = self.get_parameter('step_pos').\
+            get_parameter_value().double_array_value
 
         if len(self._step_pos) != 3:
             self.get_logger().info("Параметр step_pos не задан, устанавливается значение [0, 0, 0]")
@@ -79,8 +82,9 @@ class OdomPub(Node):
         msg.pose.pose.orientation.w = self._start_orientation_quat[0]
 
         # Умножение кватернионов чтобы сохранить результат шага
-        self._start_orientation_quat = quaternions.qmult(self._start_orientation_quat,
-                                                         self._step_orientation_quat)
+        self._start_orientation_quat = quaternions.\
+            qmult(self._start_orientation_quat,
+                  self._step_orientation_quat)
 
         self._start_pos[2] += self._step_pos[2]
 

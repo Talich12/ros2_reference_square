@@ -47,15 +47,21 @@ class ReferenceSquareNode(Node):
                 self._namespace = '/' + self._namespace
 
         # Принимаем параметр из reference_square.launch.py
-        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
-        self._mtx = self.get_parameter('mtx').get_parameter_value().double_array_value
-        self._dist = self.get_parameter('dist').get_parameter_value().double_array_value
+        self._debug = self.get_parameter('debug').\
+            get_parameter_value().bool_value
+
+        self._mtx = self.get_parameter('mtx').\
+            get_parameter_value().double_array_value
+
+        self._dist = self.get_parameter('dist').\
+            get_parameter_value().double_array_value
 
         if len(self._mtx) != 9 or len(self._dist) != 5:
-            self._сamera_info_subscription = self.create_subscription(CameraInfo,
-                                                                      self._namespace + 'config',
-                                                                      self.camera_info_callback,
-                                                                      10)
+            self._сamera_info_subscription\
+                = self.create_subscription(CameraInfo,
+                                           self._namespace + 'config',
+                                           self.camera_info_callback,
+                                           10)
             self._convert_mtx = None
 
         else:
@@ -65,22 +71,25 @@ class ReferenceSquareNode(Node):
             self._convert_mtx = mtx
             self._distortion = self._dist
 
-        self._image_subscription = self.create_subscription(Image,
-                                                            self._namespace + 'image',
-                                                            self.image_callback,
-                                                            10)
+        self._image_subscription\
+            = self.create_subscription(Image,
+                                       self._namespace + 'image',
+                                       self.image_callback,
+                                       10)
 
-        self._odom_subscription = self.create_subscription(Odometry,
-                                                           self._namespace + 'odom',
-                                                           self.odom_callback,
-                                                           10)
+        self._odom_subscription\
+            = self.create_subscription(Odometry,
+                                       self._namespace + 'odom',
+                                       self.odom_callback,
+                                       10)
 
         self._image_publisher = self.create_publisher(
             Image, self._namespace + 'reference_square/image', 10)
         self._polygon_publisher = self.create_publisher(
             Polygon, self._namespace + 'reference_square/poligon', 10)
 
-        timer_period = self.get_parameter('period_image_publish_ms').get_parameter_value().integer_value  # seconds
+        timer_period = self.get_parameter('period_image_publish_ms').\
+            get_parameter_value().integer_value  # seconds
 
         if timer_period == 0:
             self.get_logger().info("Параметр period_image_publish_ms не задан, устанавливается значение 1")
@@ -113,7 +122,7 @@ class ReferenceSquareNode(Node):
                        pose_data.orientation.y, pose_data.orientation.z]
         degrees = []
 
-        # Преобразовываем ориентацию в повороты Эйлера и переводим из радиан в градусы
+        # Преобразовываем ориентацию в повороты Эйлера в градусах
         angles = euler.quat2euler(orientation)
 
         for angle in angles:
@@ -158,20 +167,24 @@ class ReferenceSquareNode(Node):
     def timer_callback(self):
         """Построение проекционного квадрата."""
         if self._euler_angles is None:
-            self.get_logger().warning("No navigation data for making reference square")
+            self.get_logger().\
+                warning("No navigation data for making reference square")
             return
 
         if self._convert_mtx is None:
-            self.get_logger().warning("No camera info for making reference square")
+            self.get_logger().\
+                warning("No camera info for making reference square")
             return
 
         if self._image is None:
-            self.get_logger().warning("No camera image for making reference square")
+            self.get_logger().\
+                warning("No camera image for making reference square")
             return
 
         last_odom_dutation = self.get_clock().now() - self._last_stamp_odom
         if last_odom_dutation > self.DurationLimitOdom:
-            self.get_logger().warning("Odometry data too old for making reference square")
+            self.get_logger().\
+                warning("Odometry data too old for making reference square")
             return
 
         msg = Polygon()
@@ -202,7 +215,7 @@ class ReferenceSquareNode(Node):
         # Вытаскиваем элементы смещение из матрицы искажения камеры
         c_frame = camera_calibration.get_Cxy()
 
-        # Преобразуем матрицу искажений в матрицу 3x4 для работы с гомогенными коорданатами
+        # Преобразуем матрицу искажений в матрицу 3x4
         camera_calibration.create_conversion_mtx()
 
         # Преобразуем мировые координаты квадрата в координаты камеры
@@ -230,7 +243,8 @@ class ReferenceSquareNode(Node):
             self.get_logger().info('send_polygon')
 
         # Колибруем все точки
-        polyline_pts = [(r_frame - trans_vec).astype(int) for r_frame in polyline_pts]
+        polyline_pts = [(r_frame - trans_vec).astype(int)
+                        for r_frame in polyline_pts]
 
         polyline_pts = np.array(polyline_pts)
 
@@ -244,16 +258,21 @@ class ReferenceSquareNode(Node):
         if self._debug:
             color_blue = (255, 0, 0)
             cv.putText(img, 'x:{} y:{}, z:{}'.
-                       format(self._pose[0], self._pose[1], self._pose[2]),
+                       format(self._pose[0],
+                              self._pose[1],
+                              self._pose[2]),
                        (20, 40), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
 
             cv.putText(img, 'x_or:{} y_or:{}, z_or:{}'.
-                       format(self._euler_angles[0], self._euler_angles[1], self._euler_angles[2]),
+                       format(self._euler_angles[0],
+                              self._euler_angles[1],
+                              self._euler_angles[2]),
                        (20, 100), cv.FONT_HERSHEY_SIMPLEX, 2, color_blue, 4)
 
             self.get_logger().info('send_reference_square')
 
-        self._image_publisher.publish(self._br.cv2_to_imgmsg(img, encoding='rgb8'))
+        self._image_publisher.publish(self._br.cv2_to_imgmsg(img,
+                                                             encoding='rgb8'))
 
 
 def main(args=None):

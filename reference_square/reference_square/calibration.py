@@ -4,7 +4,7 @@ import numpy as np
 
 
 class CameraCalibFile:
-    """Класс реализующий чтение файла каллибровки камеры с помощью шахматной доски."""
+    """Класс реализующий перевод точек в гомогенные координаты."""
 
     def __init__(self):
         """Инициализация объектов."""
@@ -48,7 +48,11 @@ class CameraCalibFile:
         return self._dist
 
     def create_conversion_mtx(self):
-        """Перевести матрицу 3x3 в матрицу 3x4 для работы в гомогенными координатами."""
+        """
+        Перевести матрицу 3x3 в матрицу 3x4.
+
+        Делается для работы с гомогенными координатами.
+        """
         # копируем матрицу камеры
         self._conv_mtx = copy.deepcopy(self._mtx)
         for row in range(len(self._conv_mtx)):
@@ -62,8 +66,8 @@ class CameraCalibFile:
 
         Args:
         ----
-            world_coords (float[3]): Координаты точки в мировых координатах (x, y, z).
-            R (float[4][4], optional): Общая матрица преоброзаваний. Defaults to None.
+            world_coords (float[3]): В формате (x, y, z).
+            R (float[4][4]): Общая матрица преоброзаваний. Defaults to None.
 
         Returns
         -------

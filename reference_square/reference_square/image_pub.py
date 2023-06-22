@@ -45,7 +45,8 @@ class ImagePub(Node):
             if self._namespace[0] != '/':
                 self._namespace = '/' + self._namespace
 
-        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
+        self._debug = self.get_parameter('debug').\
+            get_parameter_value().bool_value
 
         self._publisher = self.create_publisher(Image,
                                                 self._namespace + 'image',
@@ -59,8 +60,9 @@ class ImagePub(Node):
 
         # Проверить существование файла с тестовым изображением
         if cv.haveImageReader(image_path) is False:
-            self.get_logger().fatal("Test image is not available, origin path: {}"
-                                    .format(image_path))
+            self.get_logger().\
+                fatal("Test image is not available, origin path: {}"
+                      .format(image_path))
             raise Exception("Test image is not available")
 
         self._test_image = cv.imread(image_path)
