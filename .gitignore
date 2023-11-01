@@ -1,5 +1,6 @@
 .vscode/**
 
+*/bagfiles/*
 build/*
 install/*
 log/*
